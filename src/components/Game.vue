@@ -35,7 +35,7 @@
         </b-card>
 
         <b-card class="mb-2 text-center d-flex">
-            <div v-for="(turn,index) in turns" :key="turn">
+            <div v-for="(turn,index) in turns" :key="index">
                 <ul>
                     <li v-bind:style="index % 2 === 0 ? style='background-color:lightcoral; color:red' : style='background-color:lightblue; color:blue'">
                         {{turn}}
