@@ -62,8 +62,8 @@
                 const player = Math.floor(Math.random() * 6) + 5;
                 this.playerHealth -= monster;
                 this.monsterHealth -= player;
-                this.turns.push('Monster hits player for ' + monster);
-                this.turns.push('Player hits monster for ' + player)
+                this.turns.unshift('Monster hits player for ' + monster);
+                this.turns.unshift('Player hits monster for ' + player)
 
             },
             heal() {
@@ -71,8 +71,8 @@
                 if (this.playerHealth <= 95) {
                     this.playerHealth += 10;
                     this.playerHealth -= monster;
-                    this.turns.push('Monster hits player for ' + monster);
-                    this.turns.push('Player heals  10')
+                    this.turns.unshift('Monster hits player for ' + monster);
+                    this.turns.unshift('Player heals  10')
 
                 }
             },
@@ -81,8 +81,8 @@
                 const player = Math.floor(Math.random() * 5) + 10;
                 this.playerHealth -= monster;
                 this.monsterHealth -= player;
-                this.turns.push('Monster hits player for ' + monster);
-                this.turns.push('Player hits monster hard for ' + player)
+                this.turns.unshift('Monster hits player for ' + monster);
+                this.turns.unshift('Player hits monster hard for ' + player)
             },
             stopGame() {
                 if (this.monsterHealth <= 0) {
@@ -154,9 +154,7 @@
         background-color: green;
         height: 40px;
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+
 
 
     }
