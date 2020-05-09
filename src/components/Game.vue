@@ -1,12 +1,11 @@
 <template>
     <div class="container">
         <section class="players d-flex my-4">
-            {{stopGame()}}
 
             <div class="player">
                 <h4 class="player-name text-center">You</h4>
                 <div class="health-bar">
-                    <b-progress-bar class="health-remaining"  :style="{width:playerHealth + '%'}"></b-progress-bar>
+                    <b-progress-bar class="health-remaining" :style="{width:playerHealth + '%'}"></b-progress-bar>
                     <p class="health ">{{ playerHealth }}</p>
                 </div>
             </div>
@@ -25,19 +24,19 @@
                 <b-button @click="attack()" variant="danger" class="mr-2">Attack</b-button>
                 <b-button @click="specialAttack()" variant="warning" class="mr-2">Special Attack</b-button>
                 <b-button @click="heal()" variant="success" class="mr-2">Heal</b-button>
-                <b-button @click="gameIsRunning = !gameIsRunning" variant="primary" class="mr-2">Give up
+                <b-button @click="giveUp()" variant="primary" class="mr-2">Give up
                 </b-button>
             </div>
 
             <div v-show="!gameIsRunning">
-                <b-button variant="success" @click="giveUp()">Start new game</b-button>
+                <b-button variant="success" @click="startGame()">Start new game</b-button>
             </div>
         </b-card>
 
         <b-card class="mb-2 text-center d-flex">
             <div v-for="(turn,index) in turns" :key="index">
                 <ul>
-                    <li v-bind:style="index % 2 === 0 ? style='background-color:lightcoral; color:red' : style='background-color:lightblue; color:blue'">
+                    <li :style="index % 2 !== 0 ? style='background-color:lightcoral; color:red' : style='background-color:lightblue; color:blue'">
                         {{turn}}
                     </li>
                 </ul>
@@ -56,60 +55,75 @@
                 gameIsRunning: false
             };
         },
+
+
         methods: {
-            attack() {
-                const monster = Math.floor(Math.random() * 6) + 5;
+            playerAttack() {
+                this.stopGame();
                 const player = Math.floor(Math.random() * 6) + 5;
-                this.playerHealth -= monster;
                 this.monsterHealth -= player;
+                this.turns.unshift('Player hits monster for ' + player);
+
+
+            },
+            startGame() {
+                this.playerHealth = 100
+                this.monsterHealth = 100
+                this.turns = []
+                this.gameIsRunning = true;
+            },
+            monsterAttack() {
+                this.stopGame();
+                const monster = Math.floor(Math.random() * 6) + 5;
+                this.playerHealth -= monster;
                 this.turns.unshift('Monster hits player for ' + monster);
-                this.turns.unshift('Player hits monster for ' + player)
+
 
             },
             heal() {
-                const monster = Math.floor(Math.random() * 6) + 5;
                 if (this.playerHealth <= 95) {
+                    this.monsterAttack();
                     this.playerHealth += 10;
-                    this.playerHealth -= monster;
-                    this.turns.unshift('Monster hits player for ' + monster);
                     this.turns.unshift('Player heals  10')
 
                 }
             },
+            attack() {
+                this.monsterAttack();
+                this.playerAttack()
+
+
+            },
             specialAttack() {
-                const monster = Math.floor(Math.random() * 6) + 5;
+                this.stopGame();
+                this.monsterAttack();
                 const player = Math.floor(Math.random() * 5) + 10;
-                this.playerHealth -= monster;
                 this.monsterHealth -= player;
-                this.turns.unshift('Monster hits player for ' + monster);
                 this.turns.unshift('Player hits monster hard for ' + player)
             },
             stopGame() {
                 if (this.monsterHealth <= 0) {
-                    this.fullHp();
-                    this.turns = [];
-                    this.giveUp();
-                    alert('You won');
+                    if (confirm('You won! New Game?')) {
+                        this.startGame()
+                    } else {
+                        this.gameIsRunning = false;
+                    }
+                    return true;
+
+                } else if (this.playerHealth <= 0) {
+                    if (confirm('You lost! New Game?')) {
+                        this.startGame()
+                    } else {
+                        this.gameIsRunning = false;
+                    }
+                    return true;
 
                 }
-                if (this.playerHealth <= 0) {
-                    this.fullHp();
-                    this.turns = [];
-                    this.giveUp();
-                    alert('You lost');
+                return false;
+            },
 
-                }
-            },
-            fullHp() {
-                this.playerHealth = 100;
-                this.monsterHealth = 100;
-            },
             giveUp() {
                 this.gameIsRunning = !this.gameIsRunning;
-                this.turns = [];
-                this.fullHp();
-
-
             },
 
         },
@@ -154,7 +168,6 @@
         background-color: green;
         height: 40px;
         position: absolute;
-
 
 
     }
