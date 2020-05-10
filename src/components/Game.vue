@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-        <section class="players d-flex my-4">
 
+        <section class="players d-flex my-4">
+            {{stopGame()}}
             <div class="player">
                 <h4 class="player-name text-center">You</h4>
                 <div class="health-bar">
@@ -21,6 +22,7 @@
 
         <b-card class="mb-2 text-center d-flex">
             <div v-show="gameIsRunning">
+
                 <b-button @click="attack()" variant="danger" class="mr-2">Attack</b-button>
                 <b-button @click="specialAttack()" variant="warning" class="mr-2">Special Attack</b-button>
                 <b-button @click="heal()" variant="success" class="mr-2">Heal</b-button>
@@ -45,7 +47,6 @@
     </div>
 </template>
 <script>
-
     export default {
         data() {
             return {
@@ -55,16 +56,12 @@
                 gameIsRunning: false
             };
         },
-
-
         methods: {
             playerAttack() {
-                this.stopGame();
+
                 const player = Math.floor(Math.random() * 6) + 5;
                 this.monsterHealth -= player;
                 this.turns.unshift('Player hits monster for ' + player);
-
-
             },
             startGame() {
                 this.playerHealth = 100
@@ -73,29 +70,22 @@
                 this.gameIsRunning = true;
             },
             monsterAttack() {
-                this.stopGame();
                 const monster = Math.floor(Math.random() * 6) + 5;
                 this.playerHealth -= monster;
                 this.turns.unshift('Monster hits player for ' + monster);
-
-
             },
             heal() {
                 if (this.playerHealth <= 95) {
                     this.monsterAttack();
                     this.playerHealth += 10;
                     this.turns.unshift('Player heals  10')
-
                 }
             },
             attack() {
                 this.monsterAttack();
                 this.playerAttack()
-
-
             },
             specialAttack() {
-                this.stopGame();
                 this.monsterAttack();
                 const player = Math.floor(Math.random() * 5) + 10;
                 this.monsterHealth -= player;
@@ -108,7 +98,6 @@
                     } else {
                         this.gameIsRunning = false;
                     }
-                    return true;
 
                 } else if (this.playerHealth <= 0) {
                     if (confirm('You lost! New Game?')) {
@@ -116,23 +105,17 @@
                     } else {
                         this.gameIsRunning = false;
                     }
-                    return true;
 
                 }
-                return false;
-            },
 
+            },
             giveUp() {
                 this.gameIsRunning = !this.gameIsRunning;
             },
-
         },
-
-
     };
 </script>
 <style scoped>
-
     .container {
         max-width: 900px;
         width: 90%;
@@ -149,8 +132,6 @@
         width: 90%;
         height: 40px;
         background-color: grey;
-
-
     }
 
     .health {
@@ -162,19 +143,14 @@
         transform: translate(-50%, -50%);
     }
 
-
     .health-remaining {
-
         background-color: green;
         height: 40px;
         position: absolute;
-
-
     }
 
     ul {
         list-style-type: none;
         margin: 2px;
     }
-
 </style>
