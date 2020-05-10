@@ -78,7 +78,7 @@
                 if (this.playerHealth <= 95) {
                     this.monsterAttack();
                     this.playerHealth += 10;
-                    this.turns.unshift('Player heals  10')
+                    this.turns.unshift('Player heals for 10')
                 }
             },
             attack() {
@@ -111,6 +111,7 @@
             },
             giveUp() {
                 this.gameIsRunning = !this.gameIsRunning;
+                alert("You Lost")
             },
         },
     };
